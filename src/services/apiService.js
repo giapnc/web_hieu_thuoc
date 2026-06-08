@@ -791,12 +791,12 @@ function getEstimatedPrice(drugName) {
   return 1000; // Default price
 }
 
-function getStockStatus(quantity) {
-  if (quantity <= 0) return 'out_of_stock';
-  if (quantity <= 50) return 'low_stock';
-  if (quantity <= 100) return 'medium_stock';
-  return 'good';
-}
+// function getStockStatus(quantity) {
+//   if (quantity <= 0) return 'out_of_stock';
+//   if (quantity <= 50) return 'low_stock';
+//   if (quantity <= 100) return 'medium_stock';
+//   return 'good';
+// }
 
 // Add company management methods to pharmacyService
 pharmacyService.getCompanyInfo = async (companyId) => {
