@@ -24,6 +24,7 @@ const ReceiveGoods = () => {
 
   useEffect(() => {
     fetchPendingShipments();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Helper function to normalize shipment data from API

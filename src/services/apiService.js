@@ -485,15 +485,15 @@ export const pharmacyService = {
   },
 
   // Get list of pharmacies (for distributors)
-  getPharmacies: async () => {
-    try {
-      const response = await apiClient.get('/pharmacies');
-      return response;
-    } catch (error) {
-      console.error('Failed to get pharmacies:', error);
-      throw error;
-    }
-  },
+  // getPharmacies: async () => {
+  //   try {
+  //     const response = await apiClient.get('/pharmacies');
+  //     return response;
+  //   } catch (error) {
+  //     console.error('Failed to get pharmacies:', error);
+  //     throw error;
+  //   }
+  // },
 
   // Get pending shipments for current pharmacy
   getPendingShipments: async () => {
