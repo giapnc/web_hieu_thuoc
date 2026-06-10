@@ -453,13 +453,11 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 1rem;
+  gap: 10px;
 }
 
 .pending-card .shipment-id {
-  background-color: #3b82f6;
-  color: white;
-  padding: 0.25rem 0.75rem;
-  border-radius: 4px;
+  background-color: #a6c3f1;
   font-size: 0.75rem;
   font-weight: 600;
 }
@@ -582,24 +580,24 @@
   .details-actions {
     flex-direction: column;
   }
-  
+
   .info-grid {
     grid-template-columns: 1fr;
   }
-  
+
   .pending-grid {
     grid-template-columns: 1fr;
   }
-  
+
   .scanner-card {
     padding: 1.5rem;
   }
-  
+
   .input-group {
     flex-direction: column;
     align-items: stretch;
   }
-  
+
   .scan-btn {
     width: 100%;
   }
