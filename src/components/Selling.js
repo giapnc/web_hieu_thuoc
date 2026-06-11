@@ -2,6 +2,7 @@ import { useState } from "react"
 import { Package, Save } from "lucide-react"
 import { pharmacyService } from "../services/apiService"
 import "./Selling.css"
+import { toast } from "react-toastify"
 
 export const Selling = () => {
   const [formData, setFormData] = useState({
@@ -22,36 +23,53 @@ export const Selling = () => {
     soDienThoai: "",
     diaChi: "",
     donThuoc: "",
-    bacSiKeDon: ""
-  });
+    bacSiKeDon: "",
+  })
 
-  const generateMockDrug = (code) => {
-    const names = ["Paracetamol 500mg", "Amoxicillin 250mg", "Ibuprofen 400mg", "Bisoprolol 5mg", "Vitamin C 1000mg", "Loratadine 10mg", "Omeprazole 20mg", "Azithromycin 500mg"];
-    const manufacturers = ["Dược Hậu Giang", "Traphaco", "Pharmacity", "Sanofi", "Pfizer", "GlaxoSmithKline", "AstraZeneca"];
-    
+  const generateMockDrug = code => {
+    const names = [
+      "Paracetamol 500mg",
+      "Amoxicillin 250mg",
+      "Ibuprofen 400mg",
+      "Bisoprolol 5mg",
+      "Vitamin C 1000mg",
+      "Loratadine 10mg",
+      "Omeprazole 20mg",
+      "Azithromycin 500mg",
+    ]
+    const manufacturers = [
+      "Dược Hậu Giang",
+      "Traphaco",
+      "Pharmacity",
+      "Sanofi",
+      "Pfizer",
+      "GlaxoSmithKline",
+      "AstraZeneca",
+    ]
+
     // Simple hash function so the same code always yields the same mock data
-    let hash = 0;
+    let hash = 0
     for (let i = 0; i < code.length; i++) {
-      hash = code.charCodeAt(i) + ((hash << 5) - hash);
+      hash = code.charCodeAt(i) + ((hash << 5) - hash)
     }
-    hash = Math.abs(hash);
-    
-    return {
-        tenThuoc: names[hash % names.length],
-        soLo: "BATCH-2026-" + (hash % 999).toString().padStart(3, '0'),
-        ngaySanXuat: "2026-01-10",
-        hanSuDung: "2029-01-10",
-        nhaSanXuat: manufacturers[hash % manufacturers.length],
-        giaBan: ((hash % 15) + 2) * 10000
-    };
-  };
+    hash = Math.abs(hash)
 
-  const handleMaThuocChange = (e) => {
-    const value = e.target.value.toUpperCase(); // Chuẩn hóa mã thuốc thành chữ hoa
-    
+    return {
+      tenThuoc: names[hash % names.length],
+      soLo: "BATCH-2026-" + (hash % 999).toString().padStart(3, "0"),
+      ngaySanXuat: "2026-01-10",
+      hanSuDung: "2029-01-10",
+      nhaSanXuat: manufacturers[hash % manufacturers.length],
+      giaBan: ((hash % 15) + 2) * 10000,
+    }
+  }
+
+  const handleMaThuocChange = e => {
+    const value = e.target.value.toUpperCase() // Chuẩn hóa mã thuốc thành chữ hoa
+
     if (value.length >= 6) {
       // Tự động fake data cho MỌI mã thuốc có độ dài từ 6 ký tự trở lên
-      const drug = generateMockDrug(value);
+      const drug = generateMockDrug(value)
       setFormData(prev => ({
         ...prev,
         maThuoc: value,
@@ -63,11 +81,11 @@ export const Selling = () => {
         giaBan: drug.giaBan,
         tongTien: drug.giaBan * prev.soLuongBan,
         maGiaoDich: "TX-" + Math.floor(Math.random() * 1000000),
-      }));
+      }))
     } else {
       // Xóa thông tin autofill nếu mã quá ngắn
-      setFormData(prev => ({ 
-        ...prev, 
+      setFormData(prev => ({
+        ...prev,
         maThuoc: e.target.value,
         tenThuoc: "",
         soLo: "",
@@ -75,40 +93,40 @@ export const Selling = () => {
         hanSuDung: "",
         nhaSanXuat: "",
         giaBan: "",
-        tongTien: ""
-      }));
+        tongTien: "",
+      }))
     }
-  };
+  }
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
+  const handleChange = e => {
+    const { name, value } = e.target
     setFormData(prev => {
-      const newData = { ...prev, [name]: value };
+      const newData = { ...prev, [name]: value }
       if (name === "soLuongBan" || name === "giaBan") {
-        newData.tongTien = (newData.soLuongBan || 0) * (newData.giaBan || 0);
+        newData.tongTien = (newData.soLuongBan || 0) * (newData.giaBan || 0)
       }
-      return newData;
-    });
-  };
+      return newData
+    })
+  }
 
-  const [isSaving, setIsSaving] = useState(false);
+  const [isSaving, setIsSaving] = useState(false)
 
   const generateMockTxHash = () => {
-    let result = "0x";
-    const chars = "0123456789abcdef";
+    let result = "0x"
+    const chars = "0123456789abcdef"
     for (let i = 0; i < 64; i++) {
-      result += chars[Math.floor(Math.random() * chars.length)];
+      result += chars[Math.floor(Math.random() * chars.length)]
     }
-    return result;
-  };
+    return result
+  }
 
   const handleSave = async () => {
     if (!formData.maThuoc) {
-      alert("Vui lòng nhập mã thuốc!");
-      return;
+      toast.error("Vui lòng nhập mã thuốc!")
+      return
     }
 
-    setIsSaving(true);
+    setIsSaving(true)
     try {
       // Chuẩn bị dữ liệu gửi lên API (Dùng dispenseWithInstructions hoặc sellItem tuỳ logic backend)
       const requestData = {
@@ -120,44 +138,70 @@ export const Selling = () => {
         mealRelation: "ANY",
         specificTimes: "",
         durationDays: 1,
-        specialNotes: formData.bacSiKeDon ? `Bác sĩ kê đơn: ${formData.bacSiKeDon}` : "",
+        specialNotes: formData.bacSiKeDon
+          ? `Bác sĩ kê đơn: ${formData.bacSiKeDon}`
+          : "",
         pharmacistName: "Dược sĩ Demo",
-        salePrice: formData.giaBan || 0
-      };
+        salePrice: formData.giaBan || 0,
+      }
 
-      const res = await pharmacyService.dispenseWithInstructions(requestData);
-      
+      const res = await pharmacyService.dispenseWithInstructions(requestData)
+
       if (res && res.success) {
-        const txHash = res.data?.transactionHash || res.data?.blockchainTxHash || generateMockTxHash(); // Tạo hash 66 ký tự chuẩn Ethereum nếu API thiếu
-        setFormData(prev => ({ ...prev, hashBlockchain: txHash }));
-        
+        const txHash =
+          res.data?.transactionHash ||
+          res.data?.blockchainTxHash ||
+          generateMockTxHash() // Tạo hash 66 ký tự chuẩn Ethereum nếu API thiếu
+        setFormData(prev => ({ ...prev, hashBlockchain: txHash }))
+
         // Auto-copy to clipboard
-        navigator.clipboard.writeText(txHash).catch(() => {});
-        alert("✅ Ghi nhận blockchain THÀNH CÔNG!\n\nTransaction Hash (Đã tự động Copy):\n" + txHash);
+        navigator.clipboard.writeText(txHash).catch(() => {})
+        toast.success(
+          "✅ Ghi nhận blockchain THÀNH CÔNG!\n\nTransaction Hash (Đã tự động Copy):\n" +
+            txHash,
+        )
       } else {
         // Fallback to sellItem if dispenseWithInstructions is not the right one
-        const pharmacyId = localStorage.getItem('pharmacy_company_id') || '1';
-        const pharmacyName = localStorage.getItem('pharmacy_company_name') || 'Pharmacy';
-        const sellRes = await pharmacyService.sellItem(formData.maThuoc, pharmacyId, pharmacyName, requestData.customerName);
-        
+        const pharmacyId = localStorage.getItem("pharmacy_company_id") || "1"
+        const pharmacyName =
+          localStorage.getItem("pharmacy_company_name") || "Pharmacy"
+        const sellRes = await pharmacyService.sellItem(
+          formData.maThuoc,
+          pharmacyId,
+          pharmacyName,
+          requestData.customerName,
+        )
+
         if (sellRes && sellRes.success) {
-           const txHash = sellRes.data?.transactionHash || sellRes.data?.blockchainTxHash || generateMockTxHash();
-           setFormData(prev => ({ ...prev, hashBlockchain: txHash }));
-           
-           // Auto-copy to clipboard
-           navigator.clipboard.writeText(txHash).catch(() => {});
-           alert("✅ Ghi nhận blockchain THÀNH CÔNG!\n\nTransaction Hash (Đã tự động Copy):\n" + txHash);
+          const txHash =
+            sellRes.data?.transactionHash ||
+            sellRes.data?.blockchainTxHash ||
+            generateMockTxHash()
+          setFormData(prev => ({ ...prev, hashBlockchain: txHash }))
+
+          // Auto-copy to clipboard
+          navigator.clipboard.writeText(txHash).catch(() => {})
+          toast.success(
+            "✅ Ghi nhận blockchain THÀNH CÔNG!\n\nTransaction Hash (Đã tự động Copy):\n" +
+              txHash,
+          )
         } else {
-           alert("❌ Lỗi khi lưu giao dịch: " + (res?.message || sellRes?.message || "Lỗi không xác định"));
+          toast.error(
+            "❌ Lỗi khi lưu giao dịch: " +
+              (res?.message || sellRes?.message || "Lỗi không xác định"),
+          )
         }
       }
     } catch (error) {
-      console.error("Lỗi khi lưu giao dịch:", error);
-      alert("❌ Giao dịch thất bại (Có thể do mã thuốc giả không có trong DB thật):\n" + error.message);
+      console.error("Lỗi khi lưu giao dịch:", error)
+      toast.error(
+        "❌ Giao dịch thất bại (Có thể do mã thuốc giả không có trong DB thật):\n" +
+          error.message,
+      )
     } finally {
-      setIsSaving(false);
+      setIsSaving(false)
     }
-  };
+  }
 
   return (
     <div className="selling-page">
@@ -307,12 +351,11 @@ export const Selling = () => {
 
           <div className="form-group">
             <label>Phương thức thanh toán</label>
-            <select 
+            <select
               className="form-select"
               name="phuongThucThanhToan"
               value={formData.phuongThucThanhToan}
-              onChange={handleChange}
-            >
+              onChange={handleChange}>
               <option>Tiền mặt</option>
               <option>Chuyển khoản</option>
               <option>Ví điện tử</option>
@@ -399,11 +442,10 @@ export const Selling = () => {
 
       {/* BUTTON */}
       <div className="form-actions">
-        <button 
-          className="btn btn-primary create-btn" 
+        <button
+          className="btn btn-primary create-btn"
           onClick={handleSave}
-          disabled={isSaving}
-        >
+          disabled={isSaving}>
           <Save size={16} />
           {isSaving ? "Đang xử lý..." : "Lưu giao dịch & Ghi blockchain"}
         </button>

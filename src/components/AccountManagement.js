@@ -16,6 +16,7 @@ import {
 } from "lucide-react"
 import pharmacyService from "../services/apiService"
 import "./AccountManagement.css"
+import { toast } from "react-toastify"
 
 const AccountManagement = () => {
   const [activeTab, setActiveTab] = useState("pharmacy")
@@ -201,16 +202,16 @@ const AccountManagement = () => {
         }
       } else {
         setEditingPharmacy(false)
-        alert("Đã cập nhật thông tin hiệu thuốc thành công!")
+        toast.success("Đã cập nhật thông tin hiệu thuốc thành công!")
       }
     } catch (error) {
-      alert("Lỗi khi cập nhật thông tin: " + error.message)
+      toast.error("Lỗi khi cập nhật thông tin: " + error.message)
     }
   }
 
   const handleAddEmployee = async () => {
     if (!newEmployee.name || !newEmployee.email || !newEmployee.phone) {
-      alert("Vui lòng điền đầy đủ thông tin bắt buộc")
+      toast.error("Vui lòng điền đầy đủ thông tin bắt buộc")
       return
     }
 
@@ -233,9 +234,9 @@ const AccountManagement = () => {
         licenseNumber: "",
       })
       setShowAddEmployee(false)
-      alert("Đã thêm nhân viên thành công!")
+      toast.success("Đã thêm nhân viên thành công!")
     } catch (error) {
-      alert("Lỗi khi thêm nhân viên: " + error.message)
+      toast.error("Lỗi khi thêm nhân viên: " + error.message)
     }
   }
 
@@ -246,9 +247,9 @@ const AccountManagement = () => {
       )
       setEmployees(updatedEmployees)
       setEditingEmployee(null)
-      alert("Đã cập nhật thông tin nhân viên thành công!")
+      toast.success("Đã cập nhật thông tin nhân viên thành công!")
     } catch (error) {
-      alert("Lỗi khi cập nhật nhân viên: " + error.message)
+      toast.error("Lỗi khi cập nhật nhân viên: " + error.message)
     }
   }
 
@@ -260,9 +261,9 @@ const AccountManagement = () => {
     try {
       const updatedEmployees = employees.filter(emp => emp.id !== employeeId)
       setEmployees(updatedEmployees)
-      alert("Đã xóa nhân viên thành công!")
+      toast.success("Đã xóa nhân viên thành công!")
     } catch (error) {
-      alert("Lỗi khi xóa nhân viên: " + error.message)
+      toast.error("Lỗi khi xóa nhân viên: " + error.message)
     }
   }
 
@@ -272,23 +273,23 @@ const AccountManagement = () => {
       !passwordData.newPassword ||
       !passwordData.confirmPassword
     ) {
-      alert("Vui lòng điền đầy đủ thông tin")
+      toast.error("Vui lòng điền đầy đủ thông tin")
       return
     }
 
     if (passwordData.newPassword !== passwordData.confirmPassword) {
-      alert("Mật khẩu xác nhận không khớp")
+      toast.error("Mật khẩu xác nhận không khớp")
       return
     }
 
     if (passwordData.newPassword.length < 6) {
-      alert("Mật khẩu mới phải có ít nhất 6 ký tự")
+      toast.error("Mật khẩu mới phải có ít nhất 6 ký tự")
       return
     }
 
     try {
       // Mock API call
-      alert("Đã đổi mật khẩu thành công!")
+      toast.success("Đã đổi mật khẩu thành công!")
       setPasswordData({
         currentPassword: "",
         newPassword: "",
@@ -296,7 +297,7 @@ const AccountManagement = () => {
       })
       setShowChangePassword(false)
     } catch (error) {
-      alert("Lỗi khi đổi mật khẩu: " + error.message)
+      toast.error("Lỗi khi đổi mật khẩu: " + error.message)
     }
   }
 

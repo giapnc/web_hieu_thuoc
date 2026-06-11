@@ -12,6 +12,7 @@ import {
 } from "lucide-react"
 import pharmacyService from "../services/apiService"
 import "./InventoryManagement.css"
+import { toast } from "react-toastify"
 
 const InventoryManagement = () => {
   const [inventory, setInventory] = useState([])
@@ -139,7 +140,7 @@ const InventoryManagement = () => {
 
   const handleAdjustStock = async () => {
     if (!selectedItem || !adjustmentData.quantity || !adjustmentData.reason) {
-      alert("Vui lòng điền đầy đủ thông tin")
+      toast.error("Vui lòng điền đầy đủ thông tin")
       return
     }
 
@@ -150,7 +151,7 @@ const InventoryManagement = () => {
           : selectedItem.currentStock - parseInt(adjustmentData.quantity)
 
       if (newQuantity < 0) {
-        alert("Số lượng không thể âm")
+        toast.error("Số lượng không thể âm")
         return
       }
 
@@ -170,11 +171,11 @@ const InventoryManagement = () => {
       setShowAdjustModal(false)
       setAdjustmentData({ type: "add", quantity: 0, reason: "" })
 
-      alert(
+      toast.success(
         `Đã ${adjustmentData.type === "add" ? "thêm" : "trừ"} ${adjustmentData.quantity} hộp thành công!`,
       )
     } catch (error) {
-      alert("Lỗi khi điều chỉnh kho: " + error.message)
+      toast.error("Lỗi khi điều chỉnh kho: " + error.message)
     }
   }
 
@@ -417,9 +418,7 @@ const InventoryManagement = () => {
                     </td>
                     <td className="batch-code-inventory">{item.batchCode}</td>
                     <td className="category">
-                      <div className="category-badge">
-                        {item.category}
-                      </div>
+                      <div className="category-badge">{item.category}</div>
                     </td>
                     <td className="stock">
                       <div className="stock-info">

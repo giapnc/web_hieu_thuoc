@@ -15,6 +15,8 @@ import Reports from "./components/Reports"
 import AccountManagement from "./components/AccountManagement"
 import LoginScreen from "./components/auth/LoginScreen"
 import { Selling } from "./components/Selling"
+import { ToastContainer } from "react-toastify"
+import "react-toastify/dist/ReactToastify.css";
 
 // Protected Route Component
 function ProtectedRoute({ children }) {
@@ -143,6 +145,8 @@ function App() {
     <Router basename={process.env.PUBLIC_URL || ''}>
       <AuthProvider>
         <AppRoutes />
+
+        <ToastContainer position="bottom-right" autoClose={3000} />
       </AuthProvider>
     </Router>
   );
